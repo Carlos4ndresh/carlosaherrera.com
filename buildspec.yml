@@ -10,10 +10,9 @@ phases:
   build:
     commands:
       - 'npm run build'
-      - 'aws s3 sync --delete "public/" "s3://www.carlosaherrera.com"'
   post_build:
     commands:
-      - echo "POST BUILD STEP"
+      - 'aws s3 sync --delete "public/" "s3://www.carlosaherrera.com"'
 artifacts:
   base-directory: public
   files:
