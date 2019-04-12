@@ -48,7 +48,7 @@ const Head = props => {
       '@type': 'Person',
       name: config.author,
     },
-    datePublished: '2019-01-17',
+    datePublished: '2019-04-12',
     dateModified: buildTime,
     image: {
       '@type': 'ImageObject',
