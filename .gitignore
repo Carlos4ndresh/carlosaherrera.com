@@ -4,6 +4,9 @@ logs
 *.log
 npm-debug.log*
 
+# terraform data
+*.terraform/*
+
 # Runtime data
 pids
 *.pid
