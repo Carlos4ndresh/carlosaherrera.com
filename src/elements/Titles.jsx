@@ -13,7 +13,7 @@ export const Title = styled.h1`
     background: url(${triangle});
     position: absolute;
     background-size: 40px;
-    ${rotateAnimation('4s')};
+    ${rotateAnimation('10s')};
     left: -60px;
     top: 5px;
   }
