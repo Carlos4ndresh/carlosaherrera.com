@@ -54,7 +54,7 @@ const ContactText = styled.p`
 `
 
 const Footer = styled.footer`
-  ${tw`text-center text-grey absolute pin-b p-6 font-sans text-md lg:text-lg`};
+  ${tw`text-center text-grey absolute pin-b p-6 font-sans text-xs xs:text-xs`};
 `
 
 const Index = () => (
@@ -112,9 +112,14 @@ const Index = () => (
         <Inner>
           <Title>Get in touch</Title>
           <ContactText>
-            Say <a href="mailto:plizNoSp4m@domain.tld">Hi</a> or find me on other platforms:{' '}
-            <a href="https://dribbble.com/LekoArts">Dribbble</a> &{' '}
-            <a href="https://www.instagram.com/lekoarts.de/">Instagram</a>
+            Say <a href="mailto:carlos.herrera@outlook.com">Hi</a> or find me on other platforms:{' '}
+            <a href="https://github.com/Carlos4ndresh" target="_blank">
+              GitHub
+            </a>{' '}
+            &{' '}
+            <a href="https://www.linkedin.com/in/carlosandresherrera" target="_blank">
+              LinkedIn
+            </a>
           </ContactText>
         </Inner>
         <Footer>
