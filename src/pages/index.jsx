@@ -67,7 +67,7 @@ const Index = () => (
         </BigTitle>
         <Subtitle>I'm creating this site, be patient.</Subtitle>
       </Hero>
-      <Projects offset={1}>
+      {/* <Projects offset={1}>
         <Title>Projects</Title>
         <ProjectsWrapper>
           <ProjectCard
@@ -99,7 +99,7 @@ const Index = () => (
             A fantasy image manipulation relocating the habitat of wild animals.
           </ProjectCard>
         </ProjectsWrapper>
-      </Projects>
+      </Projects> */}
       <About offset={3}>
         <Title>About</Title>
         <AboutHero>
