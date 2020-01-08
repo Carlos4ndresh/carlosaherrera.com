@@ -30,6 +30,7 @@ provider "aws" {
 resource "aws_s3_bucket" "build_artifact_bucket" {
   bucket = "${var.pipeline_name}-artifact-bucket"
   acl    = "private"
+  force_destroy = true
 }
 
 data "aws_iam_policy_document" "codepipeline_web_assume_policy" {
@@ -198,7 +199,7 @@ resource "aws_codepipeline" "codepipeline_personalweb" {
       version = "1"
       output_artifacts = ["code"]
 
-      configuration {
+      configuration = {
         Owner = "${var.github_username}"
         OAuthToken = "${var.github_token}"
         Repo                 = "${var.github_repo}"
@@ -220,7 +221,7 @@ resource "aws_codepipeline" "codepipeline_personalweb" {
       output_artifacts = ["deployed"]
       version          = "1"
 
-      configuration {
+      configuration = {
         ProjectName = "${aws_codebuild_project.build_personalweb_project.name}"
       }
     }
