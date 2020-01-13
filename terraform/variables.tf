@@ -1,22 +1,35 @@
 variable "aws_region"{
-    type = "string"
-    default = "us-east-2"
+    type = string
+    default = "us-east-1"
 }
 
 variable "pipeline_name" {
-    type = "string"
+    type = string
     default = "cahp-personalweb-pipeline"
 }
 
+variable "zone_id" {
+  type = string
+}
+
 variable "github_username" {
-  type    = "string"
+  type    = string
   default = "Carlos4ndresh"
 }
 
 variable "github_token" {
-  type = "string"
+  type = string
 }
 
 variable "github_repo" {
-  type = "string"
+  type = string
+}
+
+variable "certificate_arn" {
+  type = string
+}
+
+variable "website_name" {
+  type = string
+  default = "www.carlosaherrera.com"
 }

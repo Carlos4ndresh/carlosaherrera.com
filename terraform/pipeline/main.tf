@@ -157,7 +157,7 @@ resource "aws_codepipeline" "codepipeline_personalweb" {
   role_arn = aws_iam_role.codepipeline_role.arn
 
   artifact_store {
-    location = "aws_s3_bucket.build_artifact_bucket.bucket"
+    location = aws_s3_bucket.build_artifact_bucket.bucket
     type = "S3"
   }
 
@@ -173,9 +173,9 @@ resource "aws_codepipeline" "codepipeline_personalweb" {
       output_artifacts = ["code"]
 
       configuration = {
-        Owner = "var.github_username"
-        OAuthToken = "var.github_token"
-        Repo                 = "var.github_repo"
+        Owner = var.github_username
+        OAuthToken = var.github_token
+        Repo                 = var.github_repo
         Branch               = "master"
         PollForSourceChanges = "true"
       }
@@ -195,7 +195,7 @@ resource "aws_codepipeline" "codepipeline_personalweb" {
       version          = "1"
 
       configuration = {
-        ProjectName = "aws_codebuild_project.build_personalweb_project.name"
+        ProjectName = aws_codebuild_project.build_personalweb_project.name
       }
     }
   }
