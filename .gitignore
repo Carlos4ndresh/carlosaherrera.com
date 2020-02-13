@@ -71,3 +71,7 @@ wsite/.pnp/
 wsite/.pnp.js
 # Yarn Integrity file
 wsite/.yarn-integrity
+
+codebuild_build.sh
+artifacts/
+webapp/

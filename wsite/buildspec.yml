@@ -1,4 +1,4 @@
-version: 0.1
+version: 0.2
 phases:
   install:
     commands:
@@ -6,9 +6,11 @@ phases:
       - "npm install -g gatsby"
   pre_build:
     commands:
+      - "cd wsite"
       - "npm install"
   build:
     commands:
+      - "cd wsite"
       - "npm run build"
   post_build:
     commands:
