@@ -17,7 +17,7 @@ phases:
       - "ls -la "
       - 'aws s3 sync --delete "./public/" "s3://www.carlosaherrera.com"'
 artifacts:
-  base-directory: public
+  base-directory: ./wsite/public
   files:
     - "**/*"
   discard-paths: yes
