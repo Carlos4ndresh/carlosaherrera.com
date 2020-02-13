@@ -2,19 +2,19 @@ version: 0.1
 phases:
   install:
     commands:
-      - 'touch .npmignore'
-      - 'npm install -g gatsby'
+      - "touch .npmignore"
+      - "npm install -g gatsby"
   pre_build:
     commands:
-      - 'npm install'
+      - "npm install"
   build:
     commands:
-      - 'npm run build'
+      - "npm run build"
   post_build:
     commands:
-      - 'aws s3 sync --delete "public/" "s3://www.carlosaherrera.com"'
+      - 'aws s3 sync --delete "./wsite/public/" "s3://www.carlosaherrera.com"'
 artifacts:
   base-directory: public
   files:
-    - '**/*'
+    - "**/*"
   discard-paths: yes
