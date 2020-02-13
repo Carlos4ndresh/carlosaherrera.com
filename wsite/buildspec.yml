@@ -10,7 +10,7 @@ phases:
       - "npm install"
   build:
     commands:
-      - "cd wsite"
+      - "ls -la"
       - "npm run build"
   post_build:
     commands:
