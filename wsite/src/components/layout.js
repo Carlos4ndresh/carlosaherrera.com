@@ -46,7 +46,7 @@ const Layout = ({ children }) => (
         <Content>
           <main>{children}</main>
           <Footer>
-            © {new Date().getFullYear()}, Built with
+            © Carlos Andrés Herrera {new Date().getFullYear()}, Built with
             {` `}
             <GatsbyLink href="https://www.gatsbyjs.org">Gatsby</GatsbyLink>
           </Footer>

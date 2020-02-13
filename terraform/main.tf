@@ -6,14 +6,14 @@ provider "aws" {
 
 # Uncomment when site is ready to be deployed
 # in the meantime test creation of s3, cloudfront, route53 resources
-/* module "pipeline" {
+module "pipeline" {
   source = "./pipeline"
   pipeline_name = var.pipeline_name
   github_username = var.github_username
   github_repo = var.github_repo
   github_token = var.github_token
 }
- */
+
 
 # resource "aws_iam_policy" "personal_website_bucket_policy" {
 #   name        = "personal_website_bucket_policy"
@@ -27,13 +27,13 @@ provider "aws" {
 #     {
 #       "Sid": "OnlyCloudfrontReadAccess",
 #       "Principal": {
-#         "AWS": "${aws_cloudfront_origin_access_identity.personal_site_origin_access_identity}"
+#         "AWS": "${aws_cloudfront_origin_access_identity.personal_site_origin_access_identity.iam_arn}"
 #       },
 #       "Effect": "Allow",
 #       "Action": [
 #         "s3:GetObject"
 #       ],
-#       "Resource": "arn:aws:s3:::${aws_s3_bucket.website_bucket}/*"
+#       "Resource": "arn:aws:s3:::${aws_s3_bucket.website_bucket.bucket}/*"
 #     }
 #   ]
 # }
@@ -160,7 +160,7 @@ resource "aws_cloudfront_distribution" "s3_website_distribution" {
   }
 
   custom_error_response {
-    error_code = 404x
+    error_code = 404
   }
 }
 
