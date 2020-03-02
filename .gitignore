@@ -8,6 +8,7 @@ wsite/*.log
 wsite/npm-debug.log*
 wsite/yarn-debug.log*
 wsite/yarn-error.log*
+wsite/package-lock.json
 
 # Runtime data
 wsite/pids
