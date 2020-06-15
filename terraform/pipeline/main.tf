@@ -143,8 +143,7 @@ resource "aws_codebuild_project" "build_personalweb_project" {
 
   environment {
     compute_type = "BUILD_GENERAL1_SMALL"
-    # image = "aws/codebuild/nodejs:8.11.0-1.6.0"
-    image = "aws/codebuild/nodejs:latest"
+    image = "aws/codebuild/standard:4.0"
     type = "LINUX_CONTAINER"
   }
 
