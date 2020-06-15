@@ -26,6 +26,15 @@ resource "aws_s3_bucket" "personal_bucket_logs" {
   }
 }
 
+resource "aws_s3_bucket_public_access_block" "block_public_access_personal_bucket_logs_bucket" {
+  bucket = aws_s3_bucket.personal_bucket_logs.id
+
+  block_public_acls   = true
+  block_public_policy = true
+  ignore_public_acls = true
+  restrict_public_buckets = true
+}
+
 resource "aws_s3_bucket" "website_bucket" {
   bucket = var.website_name
   acl    = "public-read"
@@ -95,7 +104,7 @@ resource "aws_cloudfront_distribution" "s3_website_distribution" {
     prefix          = "cf_website_logs/"
   }
 
-  aliases = [var.website_name, "carlosaherrera.com"]
+  aliases = [var.website_name, substr(var.website_name,4,19)]
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
