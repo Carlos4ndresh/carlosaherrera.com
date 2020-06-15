@@ -14,32 +14,6 @@ module "pipeline" {
   github_token = var.github_token
 }
 
-
-# resource "aws_iam_policy" "personal_website_bucket_policy" {
-#   name        = "personal_website_bucket_policy"
-#   path        = "/"
-#   description = "Website bucket policy"
-
-#   policy = <<EOF
-# {
-#   "Version": "2012-10-17",
-#   "Statement": [
-#     {
-#       "Sid": "OnlyCloudfrontReadAccess",
-#       "Principal": {
-#         "AWS": "${aws_cloudfront_origin_access_identity.personal_site_origin_access_identity.iam_arn}"
-#       },
-#       "Effect": "Allow",
-#       "Action": [
-#         "s3:GetObject"
-#       ],
-#       "Resource": "arn:aws:s3:::${aws_s3_bucket.website_bucket.bucket}/*"
-#     }
-#   ]
-# }
-# EOF
-# }
-
 resource "aws_s3_bucket" "personal_bucket_logs" {
   bucket = "${var.website_name}-logs"
   acl    = "log-delivery-write"

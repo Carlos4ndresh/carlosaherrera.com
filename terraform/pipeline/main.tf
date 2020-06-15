@@ -136,6 +136,7 @@ resource "aws_codebuild_project" "build_personalweb_project" {
   description = "The CodeBuild project for var.pipeline_name"
   service_role = aws_iam_role.codebuild_assume_role.arn
   build_timeout = "60"
+  # badge_enabled = true
 
   artifacts {
     type = "CODEPIPELINE"
