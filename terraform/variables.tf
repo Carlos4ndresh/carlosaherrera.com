@@ -12,6 +12,10 @@ variable "zone_id" {
   type = string
 }
 
+variable "second_domain_zone_id" {
+  type = string
+}
+
 variable "github_username" {
   type    = string
   default = "Carlos4ndresh"
@@ -32,4 +36,9 @@ variable "certificate_arn" {
 variable "website_name" {
   type = string
   default = "www.carlosaherrera.com"
+}
+
+variable "second_website_name" {
+  type = string
+  default = "www.carlos4ndresh.com"
 }

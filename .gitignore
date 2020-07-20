@@ -76,3 +76,4 @@ wsite/.yarn-integrity
 codebuild_build.sh
 artifacts/
 webapp/
+wsite/package-lock.json
