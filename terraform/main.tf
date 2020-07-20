@@ -104,7 +104,7 @@ resource "aws_cloudfront_distribution" "s3_website_distribution" {
     prefix          = "cf_website_logs/"
   }
 
-  aliases = [var.website_name, substr(var.website_name,4,19)]
+  aliases = [var.website_name, substr(var.website_name,4,19), var.second_website_name, substr(var.second_website_name,4,22)]
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
