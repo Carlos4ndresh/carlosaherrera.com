@@ -169,6 +169,17 @@ resource "aws_route53_record" "second_www" {
   }
 }
 
+resource "aws_route53_record" "second_root" {
+  zone_id = var.second_domain_zone_id
+  name    = substr(var.second_website_name,4,22)
+  type    = "A"
+  alias {
+    name = aws_cloudfront_distribution.s3_website_distribution.domain_name
+    zone_id = aws_cloudfront_distribution.s3_website_distribution.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
 resource "aws_route53_record" "root_www" {
   zone_id = var.zone_id
   name    = substr(var.website_name,4,19)
