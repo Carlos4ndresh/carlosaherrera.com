@@ -1,0 +1,27 @@
+baseURL: http://www.carlosaherrera.com/
+languageCode: en-us
+title: My Personal Site
+theme: PaperMod
+params:
+  # env: production
+  defaultTheme: auto
+  profileMode:
+    enabled: false
+    title: Carlos A. Herrera # optional default will be site title
+    subtitle: This is subtitle
+    imageUrl: file://.assets/img/me.heic # optional
+    imageTitle: me # optional
+    imageWidth: 120 # custom size
+    imageHeight: 120 # custom size
+    buttons:
+      - name: Archive
+        url: /archive
+      - name: tw0
+        url: ''
+
+  socialIcons:
+    # optional
+    - name: LinkedIn
+      url: https://www.linkedin.com/in/carlosandresherrera
+    - name: GitHub
+      url: https://github.com/Carlos4ndresh
