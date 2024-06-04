@@ -1,11 +1,11 @@
 baseURL: http://www.carlosaherrera.com/
 languageCode: en-us
-title: My Personal Site
+title: Carlos A. Herrera Perez
 theme: PaperMod
 params:
   # env: production
   homeInfoParams:
-    Title: Hi there wave
+    Title: Hello there 👋🏽. Welcome! Please have a look around
     Content: Can be Info, links, about...
 
   socialIcons:
