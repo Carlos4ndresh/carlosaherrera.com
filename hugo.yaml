@@ -3,10 +3,14 @@ languageCode: en-us
 title: Carlos A. Herrera Perez
 theme: PaperMod
 params:
-  # env: production
-  homeInfoParams:
-    Title: Hello there 👋🏽. Welcome! Please have a look around
-    Content: Can be Info, links, about...
+  profileMode:
+    enabled: true
+    title: "Carlos A. Herrera Perez" # optional default will be site title
+    subtitle: "Being modded"
+    # imageUrl: "<image link>" # optional
+    # imageTitle: "<title of image as alt>" # optional
+    # imageWidth: 120 # custom size
+    # imageHeight: 120 # custom size
 
   socialIcons:
     # optional
