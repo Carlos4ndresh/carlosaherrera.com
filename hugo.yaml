@@ -5,8 +5,8 @@ theme: PaperMod
 params:
   profileMode:
     enabled: true
-    title: "Carlos A. Herrera Perez" # optional default will be site title
-    subtitle: "Being modded"
+    title: "Consider this my business card" # optional default will be site title
+    subtitle: "Plumbing work in progress..."
     # imageUrl: "<image link>" # optional
     # imageTitle: "<title of image as alt>" # optional
     # imageWidth: 120 # custom size
