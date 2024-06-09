@@ -1,0 +1,16 @@
+baseURL: http://www.carlosaherrera.com/
+languageCode: en-us
+title: Carlos A. Herrera Perez
+theme: PaperMod
+params:
+  # env: production
+  homeInfoParams:
+    Title: Hello there 👋🏽. Welcome! Please have a look around
+    Content: Can be Info, links, about...
+
+  socialIcons:
+    # optional
+    - name: LinkedIn
+      url: https://www.linkedin.com/in/carlosandresherrera
+    - name: GitHub
+      url: https://github.com/Carlos4ndresh

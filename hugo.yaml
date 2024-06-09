@@ -1,0 +1,20 @@
+baseURL: http://www.carlosaherrera.com/
+languageCode: en-us
+title: Carlos A. Herrera Perez
+theme: PaperMod
+params:
+  profileMode:
+    enabled: true
+    title: "Consider this my business card" # optional default will be site title
+    subtitle: "Plumbing work in progress..."
+    # imageUrl: "<image link>" # optional
+    # imageTitle: "<title of image as alt>" # optional
+    # imageWidth: 120 # custom size
+    # imageHeight: 120 # custom size
+
+  socialIcons:
+    # optional
+    - name: LinkedIn
+      url: https://www.linkedin.com/in/carlosandresherrera
+    - name: GitHub
+      url: https://github.com/Carlos4ndresh
