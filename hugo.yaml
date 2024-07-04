@@ -1,6 +1,6 @@
 baseURL: http://www.carlosaherrera.com/
 languageCode: en-us
-title: Carlos A. Herrera Perez
+title: Carlos A. Herrera
 theme: PaperMod
 params:
   profileMode:
