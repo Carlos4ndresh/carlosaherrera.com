@@ -4,6 +4,7 @@ title: Carlos A. Herrera
 theme: PaperMod
 params:
   profileMode:
+    social: true
     enabled: true
     title: "Consider this my business card" # optional default will be site title
     subtitle: "Plumbing work in progress..."
