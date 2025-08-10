@@ -35,7 +35,7 @@ func main() {
 		}
 
 		// Configure bucket for static website hosting
-		_, err = s3.NewBucketWebsiteConfigurationV2(ctx, "site-bucket-website", &s3.BucketWebsiteConfigurationV2Args{
+		websiteConfig, err := s3.NewBucketWebsiteConfigurationV2(ctx, "site-bucket-website", &s3.BucketWebsiteConfigurationV2Args{
 			Bucket: siteBucket.ID(),
 			IndexDocument: &s3.BucketWebsiteConfigurationV2IndexDocumentArgs{
 				Suffix: pulumi.String("index.html"),
@@ -107,18 +107,6 @@ func main() {
 			return err
 		}
 
-		// Create CloudFront Origin Access Control (OAC)
-		oac, err := cloudfront.NewOriginAccessControl(ctx, "site-oac", &cloudfront.OriginAccessControlArgs{
-			Name:                          pulumi.String(fmt.Sprintf("%s-oac", domain)),
-			Description:                   pulumi.String("Origin Access Control for carlosaherrera.com"),
-			OriginAccessControlOriginType: pulumi.String("s3"),
-			SigningBehavior:               pulumi.String("always"),
-			SigningProtocol:               pulumi.String("sigv4"),
-		})
-		if err != nil {
-			return err
-		}
-
 		// Create CloudFront distribution
 		distribution, err := cloudfront.NewDistribution(ctx, "site-distribution", &cloudfront.DistributionArgs{
 			Enabled: pulumi.Bool(true),
@@ -126,9 +114,16 @@ func main() {
 
 			Origins: cloudfront.DistributionOriginArray{
 				&cloudfront.DistributionOriginArgs{
-					DomainName:            siteBucket.BucketDomainName,
-					OriginId:              pulumi.String("s3-origin"),
-					OriginAccessControlId: oac.ID(),
+					DomainName: websiteConfig.WebsiteEndpoint,
+					OriginId:   pulumi.String("s3-origin"),
+					CustomOriginConfig: &cloudfront.DistributionOriginCustomOriginConfigArgs{
+						OriginProtocolPolicy: pulumi.String("http-only"),
+						HttpPort:             pulumi.Int(80),
+						HttpsPort:            pulumi.Int(443),
+						OriginSslProtocols: pulumi.StringArray{
+							pulumi.String("TLSv1.2"),
+						},
+					},
 				},
 			},
 
@@ -207,48 +202,38 @@ func main() {
 			return err
 		}
 
-		// Create bucket policy to allow CloudFront access via OAC
-		bucketPolicyJSON := pulumi.All(siteBucket.Arn, distribution.Arn).ApplyT(func(args []interface{}) string {
-			bucketArn := args[0].(string)
-			distributionArn := args[1].(string)
-			
-			return fmt.Sprintf(`{
-				"Version": "2012-10-17",
-				"Statement": [
-					{
-						"Sid": "AllowCloudFrontServicePrincipal",
-						"Effect": "Allow",
-						"Principal": {
-							"Service": "cloudfront.amazonaws.com"
-						},
-						"Action": "s3:GetObject",
-						"Resource": "%s/*",
-						"Condition": {
-							"StringEquals": {
-								"AWS:SourceArn": "%s"
-							}
-						}
-					}
-				]
-			}`, bucketArn, distributionArn)
-		}).(pulumi.StringOutput)
-
-		_, err = s3.NewBucketPolicy(ctx, "site-bucket-policy", &s3.BucketPolicyArgs{
-			Bucket: siteBucket.ID(),
-			Policy: bucketPolicyJSON,
+		// Allow public read access for website hosting (but block other public access)
+		publicAccessBlock, err := s3.NewBucketPublicAccessBlock(ctx, "site-bucket-pab", &s3.BucketPublicAccessBlockArgs{
+			Bucket:                siteBucket.ID(),
+			BlockPublicAcls:       pulumi.Bool(true),
+			BlockPublicPolicy:     pulumi.Bool(false), // Allow public read policy
+			IgnorePublicAcls:      pulumi.Bool(true),
+			RestrictPublicBuckets: pulumi.Bool(false), // Allow public read
 		})
 		if err != nil {
 			return err
 		}
 
-		// Block all public access to the bucket (CloudFront will access via OAC)
-		_, err = s3.NewBucketPublicAccessBlock(ctx, "site-bucket-pab", &s3.BucketPublicAccessBlockArgs{
-			Bucket:                siteBucket.ID(),
-			BlockPublicAcls:       pulumi.Bool(true),
-			BlockPublicPolicy:     pulumi.Bool(true),
-			IgnorePublicAcls:      pulumi.Bool(true),
-			RestrictPublicBuckets: pulumi.Bool(true),
-		})
+		// Create bucket policy to allow public read access (required for S3 website hosting)
+		bucketPolicyJSON := siteBucket.Arn.ApplyT(func(bucketArn string) string {
+			return fmt.Sprintf(`{
+				"Version": "2012-10-17",
+				"Statement": [
+					{
+						"Sid": "PublicReadGetObject",
+						"Effect": "Allow",
+						"Principal": "*",
+						"Action": "s3:GetObject",
+						"Resource": "%s/*"
+					}
+				]
+			}`, bucketArn)
+		}).(pulumi.StringOutput)
+
+		_, err = s3.NewBucketPolicy(ctx, "site-bucket-policy", &s3.BucketPolicyArgs{
+			Bucket: siteBucket.ID(),
+			Policy: bucketPolicyJSON,
+		}, pulumi.DependsOn([]pulumi.Resource{publicAccessBlock}))
 		if err != nil {
 			return err
 		}

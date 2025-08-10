@@ -71,5 +71,3 @@ I'm always interested in discussing new opportunities, collaborating on interest
 Feel free to reach out through [LinkedIn](https://www.linkedin.com/in/carlosandresherrera), check out my work on [GitHub](https://github.com/Carlos4ndresh), or send me an [email](mailto:contact@carlosaherrera.com).
 
 ---
-
-*"The best way to predict the future is to create it."* - Peter Drucker
