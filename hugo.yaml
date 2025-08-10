@@ -2,20 +2,77 @@ baseURL: http://www.carlosaherrera.com/
 languageCode: en-us
 title: Carlos A. Herrera
 theme: PaperMod
-params:
-  profileMode:
-    social: true
-    enabled: true
-    title: "Consider this my business card" # optional default will be site title
-    subtitle: "Plumbing work in progress..."
-    # imageUrl: "<image link>" # optional
-    # imageTitle: "<title of image as alt>" # optional
-    # imageWidth: 120 # custom size
-    # imageHeight: 120 # custom size
 
+# Fix for raw HTML warnings
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+
+# Suppress raw HTML warnings
+ignoreLogs: ['warning-goldmark-raw-html']
+
+params:
+  # Custom color scheme
+  customCss: ["css/custom.css"]
+  
+  # Profile mode configuration
+  profileMode:
+    enabled: true
+    title: "Carlos A. Herrera"
+    subtitle: "Software Engineer & Technology Professional"
+    imageUrl: "img/profile.jpg"
+    imageTitle: "Carlos A. Herrera - Professional Photo"
+    imageWidth: 160
+    imageHeight: 160
+    buttons:
+      - name: About
+        url: "/about/"
+      - name: Portfolio
+        url: "/portfolio/"
+      - name: Contact
+        url: "/contact/"
+
+  # Social icons
   socialIcons:
-    # optional
     - name: LinkedIn
       url: https://www.linkedin.com/in/carlosandresherrera
     - name: GitHub
       url: https://github.com/Carlos4ndresh
+    - name: Email
+      url: "mailto:contact@carlosaherrera.com"
+
+  # Site settings
+  ShowReadingTime: true
+  ShowShareButtons: true
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: true
+  ShowWordCount: true
+  ShowToc: true
+  
+  # Hide header/navigation
+  hideHeader: true
+  disableThemeToggle: false
+  
+  # SEO and metadata
+  env: production
+  keywords: ["Carlos Herrera", "Software Engineer", "Developer", "Technology"]
+  author: "Carlos A. Herrera"
+  description: "Carlos A. Herrera - Software Engineer and Technology Professional"
+  
+  # Fix deprecated Social warning - use params instead of site
+  Social:
+    linkedin: "https://www.linkedin.com/in/carlosandresherrera"
+    github: "https://github.com/Carlos4ndresh"
+    email: "contact@carlosaherrera.com"
+
+# No menu configuration - this removes the top bar
+# Navigation is handled through profile mode buttons
+
+# Output formats
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
