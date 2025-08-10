@@ -46,7 +46,7 @@ jobs:
       - name: 🏗️ Build Hugo site
         run: |
           echo "🏗️ Building Hugo site..."
-          hugo --minify --gc --verbose
+          hugo --minify --gc
           echo "✅ Hugo build completed"
           
           echo "📊 Build statistics:"
