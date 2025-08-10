@@ -1,0 +1,482 @@
+/* Carlos A. Herrera - Modern Professional Website 2025 */
+
+:root {
+    /* Modern 2025 Color Palette - Sophisticated & Contemporary */
+    --primary: #6366f1;           /* Modern indigo - less aggressive than blue */
+    --primary-light: #8b5cf6;     /* Purple accent for variety */
+    --primary-dark: #4f46e5;      /* Darker indigo for depth */
+    --accent: #06b6d4;            /* Cyan accent - fresh and modern */
+    --accent-warm: #f59e0b;       /* Warm amber for highlights */
+    
+    /* Sophisticated Grays */
+    --text-primary: #0f172a;      /* Almost black for high contrast */
+    --text-secondary: #475569;    /* Medium slate for secondary text */
+    --text-muted: #94a3b8;        /* Light slate for subtle text */
+    
+    /* Modern Backgrounds */
+    --bg-primary: #ffffff;        /* Pure white */
+    --bg-secondary: #f8fafc;      /* Subtle gray background */
+    --bg-tertiary: #f1f5f9;       /* Slightly more gray */
+    --bg-glass: rgba(255, 255, 255, 0.85); /* Glass morphism */
+    
+    /* Modern Borders & Shadows */
+    --border: #e2e8f0;            /* Subtle border */
+    --border-light: #f1f5f9;      /* Very light border */
+    --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+    --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.1);
+    --shadow-lg: 0 8px 25px rgba(15, 23, 42, 0.12);
+    --shadow-glass: 0 8px 32px rgba(15, 23, 42, 0.08);
+    
+    /* Modern Gradients */
+    --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    --gradient-accent: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+    --gradient-bg: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+}
+
+/* Global Body Styling */
+body {
+    background: var(--gradient-bg);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+}
+
+/* Glass Morphism Profile Card */
+.profile_inner {
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    padding: 4rem 3rem;
+    box-shadow: var(--shadow-glass);
+    position: relative;
+    overflow: hidden;
+}
+
+.profile_inner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, var(--primary), var(--accent), var(--primary-light), var(--primary));
+    opacity: 0.03;
+    animation: rotate 20s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Modern Profile Image */
+.profile img {
+    border: none;
+    border-radius: 50%;
+    box-shadow: var(--shadow-lg);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 2;
+}
+
+.profile img:hover {
+    transform: scale(1.08);
+    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+}
+
+/* Typography - Modern & Clean */
+.profile .profile_inner h1 {
+    color: var(--text-primary);
+    font-weight: 800;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.025em;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.profile .profile_inner .subtitle {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+/* Modern Button System - No Heavy Blue! */
+.profile .buttons {
+    margin-top: 3rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.profile .button {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 2px solid var(--border);
+    padding: 0.875rem 2rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.profile .button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-accent);
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+}
+
+.profile .button:hover {
+    color: white;
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.profile .button:hover::before {
+    left: 0;
+}
+
+.profile .button:active {
+    transform: translateY(-1px);
+}
+
+/* Modern Social Icons */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2.5rem;
+}
+
+.social-icons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    color: var(--text-secondary);
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+.social-icons a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.social-icons a:hover {
+    color: white;
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.social-icons a:hover::before {
+    opacity: 1;
+}
+
+.social-icons a svg {
+    width: 28px;
+    height: 28px;
+    z-index: 1;
+}
+
+/* Hide Header Completely */
+.header {
+    display: none !important;
+}
+
+/* Floating Dark Mode Toggle */
+#theme-toggle {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 1000;
+    width: 48px;
+    height: 48px;
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-md);
+    color: var(--text-secondary);
+}
+
+#theme-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+#theme-toggle svg {
+    width: 24px;
+    height: 24px;
+    transition: all 0.3s ease;
+}
+
+/* Responsive positioning for mobile */
+@media (max-width: 768px) {
+    #theme-toggle {
+        top: 1rem;
+        right: 1rem;
+        width: 44px;
+        height: 44px;
+    }
+    
+    #theme-toggle svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Modern Content Cards */
+.post-entry, .project-card {
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 1.5rem 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-sm);
+}
+
+.post-entry:hover, .project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+}
+
+/* Skills Grid - Modern Layout */
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.skill-item {
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-sm);
+}
+
+.skill-item:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+}
+
+/* Highlight Box Modern Style */
+.highlight-box {
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--primary);
+    border-radius: 16px;
+    padding: 2rem;
+    margin: 2rem 0;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+}
+
+.highlight-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+    border-radius: 16px 16px 0 0;
+}
+
+/* Dark Mode Support */
+[data-theme="dark"] {
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    --bg-glass: rgba(15, 23, 42, 0.8);
+    --border: #334155;
+    --border-light: #475569;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.5);
+    --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] body {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+}
+
+[data-theme="dark"] .profile_inner {
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .profile .button {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+/* Dark Mode Toggle Styling */
+[data-theme="dark"] #theme-toggle {
+    background: var(--bg-glass);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] #theme-toggle:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* Dark Mode Social Icons */
+[data-theme="dark"] .social-icons a {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .social-icons a:hover {
+    color: white;
+}
+
+/* Dark Mode Content Cards */
+[data-theme="dark"] .post-entry, 
+[data-theme="dark"] .project-card,
+[data-theme="dark"] .skill-item {
+    background: var(--bg-glass);
+    border: 1px solid var(--border);
+}
+
+[data-theme="dark"] .highlight-box {
+    background: var(--bg-glass);
+    border: 1px solid var(--primary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile_inner {
+        padding: 2.5rem 1.5rem;
+    }
+    
+    .profile .profile_inner h1 {
+        font-size: 2rem;
+    }
+    
+    .skills-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .profile .buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .profile .button {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .social-icons {
+        gap: 0.75rem;
+    }
+    
+    .social-icons a {
+        width: 48px;
+        height: 48px;
+    }
+}
+
+/* Smooth Animations */
+* {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+/* Micro Interactions */
+.profile .button,
+.social-icons a,
+.post-entry,
+.project-card,
+.skill-item {
+    will-change: transform;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+}

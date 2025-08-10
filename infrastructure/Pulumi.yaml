@@ -1,0 +1,9 @@
+name: carlosaherrera.com
+description: Modern Hugo website infrastructure for Carlos A. Herrera
+runtime: go
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: go
+      project: personal-website
+      owner: Carlos A. Herrera
