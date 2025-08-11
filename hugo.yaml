@@ -20,7 +20,7 @@ params:
   profileMode:
     enabled: true
     title: "Carlos A. Herrera"
-    subtitle: "Software Engineer & Technology Professional"
+    subtitle: "Cloud Architect & DevOps Engineer"
     imageUrl: "img/profile.jpg"
     imageTitle: "Carlos A. Herrera - Professional Photo"
     imageWidth: 160
@@ -57,9 +57,9 @@ params:
   
   # SEO and metadata
   env: production
-  keywords: ["Carlos Herrera", "Software Engineer", "Developer", "Technology"]
+  keywords: ["Carlos Herrera", "Cloud Architect", "DevOps Engineer", "AWS", "Infrastructure", "Automation"]
   author: "Carlos A. Herrera"
-  description: "Carlos A. Herrera - Software Engineer and Technology Professional"
+  description: "Carlos A. Herrera - Cloud Architect and DevOps Engineer specializing in AWS, infrastructure automation, and platform engineering"
   
   # Fix deprecated Social warning - use params instead of site
   Social:

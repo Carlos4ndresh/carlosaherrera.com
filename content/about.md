@@ -2,72 +2,91 @@
 title: "About Me"
 date: 2025-01-28
 draft: false
-description: "Learn more about Carlos A. Herrera - Software Engineer and Technology Professional"
+description: "Learn more about Carlos A. Herrera - Cloud Architect and DevOps Engineer"
 ShowToc: true
 TocOpen: false
 ---
 
 ## Hello, I'm Carlos A. Herrera
 
-Welcome to my corner of the web! I'm a passionate software engineer and technology professional with a drive for creating innovative solutions and building meaningful digital experiences.
+Welcome to my corner of the web! I'm a passionate **Cloud Architect and DevOps Engineer** with extensive experience in designing, implementing, and managing cloud-native infrastructure and automated deployment pipelines.
 
 ### Professional Background
 
-I specialize in developing robust, scalable software solutions that solve real-world problems. My expertise spans across various technologies and domains, with a focus on:
+I specialize in architecting scalable, secure, and cost-effective cloud solutions that enable organizations to thrive in the digital era. My expertise spans across cloud platforms, infrastructure automation, and DevOps culture transformation:
 
-- **Software Development**: Building applications that are both functional and user-friendly
-- **Technology Strategy**: Helping organizations leverage technology for growth and efficiency  
-- **Problem Solving**: Analyzing complex challenges and designing elegant solutions
-- **Team Collaboration**: Working effectively with cross-functional teams to deliver results
+- **Cloud Architecture**: Designing resilient, scalable cloud infrastructures across AWS, GCP, and multi-cloud environments
+- **Infrastructure as Code**: Implementing automated, repeatable infrastructure using Terraform, Pulumi, CloudFormation 
+- **DevOps & CI/CD**: Building robust deployment pipelines, automated testing, and continuous delivery workflows
+- **Platform Engineering**: Creating developer-friendly platforms that accelerate software delivery and improve reliability
 
 ### Core Skills & Technologies
 
 <div class="skills-grid">
 
-**Programming Languages**
-- JavaScript/TypeScript
-- Python
-- Java
-- Go
+**Cloud Platforms**
+- Amazon Web Services (AWS)
+- Google Cloud Platform (GCP)
+- Kubernetes
+- Multi-cloud architectures
+- Cloud migration strategies
 
-**Web Technologies**
-- React/Next.js
-- Node.js
-- HTML5/CSS3
-- RESTful APIs
+**Infrastructure as Code**
+- Terraform / Pulumi
+- AWS CloudFormation
 
-**Cloud & DevOps**
-- AWS/Azure
-- Docker
-- CI/CD Pipelines
-- Infrastructure as Code
+**DevOps & CI/CD**
+- GitHub Actions
+- GitLab CI
+- Docker / Kubernetes
+- Monitoring & Observability
 
-**Databases**
-- PostgreSQL
-- MongoDB
-- Redis
-- SQL Server
+**Automation & Scripting**
+- Bash
+- Python / Go
+- Infrastructure automation
+- Configuration management
 
 </div>
 
+### Architecture Philosophy
+
+My approach to cloud architecture is built on these core principles:
+
+- **Security by Design**: Implementing security controls at every layer of the infrastructure
+- **Cost Optimization**: Designing solutions that balance performance with operational efficiency
+- **Scalability & Resilience**: Building systems that can grow and recover gracefully
+- **Automation First**: Eliminating manual processes through intelligent automation
+- **Developer Experience**: Creating platforms that empower development teams to deliver faster
+
 ### What Drives Me
 
-I'm motivated by the intersection of technology and human needs. Whether it's streamlining business processes, creating engaging user experiences, or solving complex technical challenges, I find fulfillment in building solutions that make a positive impact.
+I'm passionate about the transformative power of cloud technology and DevOps practices. Whether it's migrating legacy systems to the cloud, implementing zero-downtime deployments, or building self-healing infrastructure, I find fulfillment in solving complex technical challenges that enable business success.
 
-### Beyond Code
+### Beyond Infrastructure
 
-When I'm not coding, you'll find me:
+When I'm not architecting cloud solutions, you'll find me:
 
-- 🎯 Exploring new technologies and staying current with industry trends
-- 📚 Reading about software architecture and best practices
-- 🌱 Contributing to open-source projects
-- 💡 Mentoring fellow developers and sharing knowledge
-- 🚀 Working on personal projects that challenge my skills
+- 🏗️ Exploring emerging cloud services and infrastructure patterns
+- 📖 Reading about cloud-native architectures and DevOps methodologies  
+- 🤝 Mentoring teams on DevOps culture transformation
+- 🎯 Contributing to infrastructure automation projects
+- 🚀 Experimenting with new deployment strategies and monitoring tools
+
+### Professional Focus Areas
+
+Currently, I'm particularly focused on:
+
+- **Multi-cloud strategies** and avoiding vendor lock-in
+- **GitOps workflows** and declarative infrastructure management
+- **Platform engineering** and internal developer platforms
+- **FinOps practices** for cloud cost optimization
+- **Site reliability engineering** and observability
 
 ### Let's Connect
 
-I'm always interested in discussing new opportunities, collaborating on interesting projects, or simply connecting with fellow technology enthusiasts. Whether you're looking for a skilled developer, want to discuss a project idea, or just want to chat about the latest in tech, I'd love to hear from you.
+I'm always interested in discussing cloud architecture challenges, DevOps transformations, or infrastructure automation opportunities. Whether you're looking for a cloud architect to design your next-generation platform, want to discuss migration strategies, or just want to chat about the latest in cloud technology, I'd love to hear from you.
 
-Feel free to reach out through [LinkedIn](https://www.linkedin.com/in/carlosandresherrera), check out my work on [GitHub](https://github.com/Carlos4ndresh), or send me an [email](mailto:contact@carlosaherrera.com).
+Feel free to reach out through [LinkedIn](https://www.linkedin.com/in/carlosandresherrera), check out my infrastructure projects on [GitHub](https://github.com/Carlos4ndresh), or send me an [email](mailto:contact@carlosaherrera.com).
 
 ---
