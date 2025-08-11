@@ -1,8 +1,8 @@
 ---
 title: "About Me"
-date: 2025-01-28
+date: 2025-08-09
 draft: false
-description: "Learn more about Carlos A. Herrera - Software Engineer and Technology Professional"
+description: "Learn more about Carlos A. Herrera - Technology Professional"
 ShowToc: true
 TocOpen: false
 ---
