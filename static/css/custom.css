@@ -1,34 +1,43 @@
 /* Carlos A. Herrera - Modern Professional Website 2025 */
 
+/* Override PaperMod theme variables with higher specificity */
+html:root,
 :root {
-    /* Modern 2025 Color Palette - Sophisticated & Contemporary */
-    --primary: #6366f1;           /* Modern indigo - less aggressive than blue */
-    --primary-light: #8b5cf6;     /* Purple accent for variety */
-    --primary-dark: #4f46e5;      /* Darker indigo for depth */
-    --accent: #06b6d4;            /* Cyan accent - fresh and modern */
-    --accent-warm: #f59e0b;       /* Warm amber for highlights */
+    /* Override PaperMod's theme variables */
+    --theme: #ffffff !important;              /* Override theme background */
+    --entry: #ffffff !important;              /* Override entry background */
+    --primary: #6366f1 !important;            /* Override primary color with modern indigo */
+    --secondary: #475569 !important;          /* Override secondary with medium slate */
+    --tertiary: #e2e8f0 !important;           /* Override tertiary with subtle border */
+    --content: #0f172a !important;            /* Override content color */
+    --border: #e2e8f0 !important;             /* Override border color */
+    
+    /* Our custom modern palette */
+    --primary-light: #8b5cf6;                 /* Purple accent for variety */
+    --primary-dark: #4f46e5;                  /* Darker indigo for depth */
+    --accent: #06b6d4;                        /* Cyan accent - fresh and modern */
+    --accent-warm: #f59e0b;                   /* Warm amber for highlights */
     
     /* Sophisticated Grays */
-    --text-primary: #0f172a;      /* Almost black for high contrast */
-    --text-secondary: #475569;    /* Medium slate for secondary text */
-    --text-muted: #94a3b8;        /* Light slate for subtle text */
+    --text-primary: #0f172a;                  /* Almost black for high contrast */
+    --text-secondary: #475569;                /* Medium slate for secondary text */
+    --text-muted: #94a3b8;                    /* Light slate for subtle text */
     
     /* Modern Backgrounds */
-    --bg-primary: #ffffff;        /* Pure white */
-    --bg-secondary: #f8fafc;      /* Subtle gray background */
-    --bg-tertiary: #f1f5f9;       /* Slightly more gray */
-    --bg-glass: rgba(255, 255, 255, 0.85); /* Glass morphism */
+    --bg-primary: #ffffff;                    /* Pure white */
+    --bg-secondary: #f8fafc;                  /* Subtle gray background */
+    --bg-tertiary: #f1f5f9;                   /* Slightly more gray */
+    --bg-glass: rgba(255, 255, 255, 0.85);   /* Glass morphism */
     
     /* Modern Borders & Shadows */
-    --border: #e2e8f0;            /* Subtle border */
-    --border-light: #f1f5f9;      /* Very light border */
+    --border-light: #f1f5f9;                  /* Very light border */
     --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
     --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.1);
     --shadow-lg: 0 8px 25px rgba(15, 23, 42, 0.12);
     --shadow-glass: 0 8px 32px rgba(15, 23, 42, 0.08);
     
     /* Modern Gradients */
-    --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    --gradient-primary: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
     --gradient-accent: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
     --gradient-bg: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
 }
