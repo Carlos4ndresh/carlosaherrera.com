@@ -1,5 +1,5 @@
 baseURL: http://www.carlosaherrera.com/
-languageCode: en-us
+locale: en-us
 title: Carlos A. Herrera
 theme: PaperMod
 
