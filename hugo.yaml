@@ -1,76 +1,57 @@
-baseURL: http://www.carlosaherrera.com/
-locale: en-us
+baseURL: https://www.carlosaherrera.com/
 title: Carlos A. Herrera
-theme: PaperMod
 
-# Fix for raw HTML warnings
+module:
+  imports:
+    - path: github.com/jpanther/congo/v2
+
+locale: en-us
+
 markup:
   goldmark:
     renderer:
       unsafe: true
 
-# Suppress raw HTML warnings
-ignoreLogs: ['warning-goldmark-raw-html']
-
 params:
-  # Custom color scheme
-  customCss: ["css/custom.css"]
-  
-  # Profile mode configuration
-  profileMode:
-    enabled: true
-    title: "Carlos A. Herrera"
-    subtitle: "Cloud Architect & DevOps Engineer"
-    imageUrl: "img/profile.jpg"
-    imageTitle: "Carlos A. Herrera - Professional Photo"
-    imageWidth: 160
-    imageHeight: 160
-    buttons:
-      - name: About
-        url: "/about/"
-      - name: Portfolio
-        url: "/portfolio/"
-      - name: Contact
-        url: "/contact/"
+  colorScheme: congo
+  defaultAppearance: dark
+  autoSwitchAppearance: true
 
-  # Social icons
-  socialIcons:
-    - name: LinkedIn
-      url: https://www.linkedin.com/in/carlosandresherrera
-    - name: GitHub
-      url: https://github.com/Carlos4ndresh
-    - name: Email
-      url: "mailto:contact@carlosaherrera.com"
+  header:
+    layout: basic
+    showTitle: true
 
-  # Site settings
-  ShowReadingTime: true
-  ShowShareButtons: true
-  ShowPostNavLinks: true
-  ShowBreadCrumbs: true
-  ShowCodeCopyButtons: true
-  ShowWordCount: true
-  ShowToc: true
-  
-  # Hide header/navigation
-  hideHeader: true
-  disableThemeToggle: false
-  
-  # SEO and metadata
-  env: production
-  keywords: ["Carlos Herrera", "Cloud Architect", "DevOps Engineer", "AWS", "Infrastructure", "Automation"]
-  author: "Carlos A. Herrera"
-  description: "Carlos A. Herrera - Cloud Architect and DevOps Engineer specializing in AWS, infrastructure automation, and platform engineering"
-  
-  # Fix deprecated Social warning - use params instead of site
-  Social:
-    linkedin: "https://www.linkedin.com/in/carlosandresherrera"
-    github: "https://github.com/Carlos4ndresh"
-    email: "contact@carlosaherrera.com"
+  footer:
+    showCopyright: true
+    showThemeAttribution: false
+    showAppearanceSwitcher: true
+    showScrollToTop: true
 
-# No menu configuration - this removes the top bar
-# Navigation is handled through profile mode buttons
+  homepage:
+    layout: profile
+    showRecent: false
 
-# Output formats
+  article:
+    showDate: false
+    showAuthor: false
+    showReadingTime: false
+    showTableOfContents: false
+    showPagination: false
+
+  author:
+    name: Carlos A. Herrera
+    headline: Cloud Architect & DevOps Engineer
+    links:
+      - linkedin: https://www.linkedin.com/in/carlosandresherrera
+      - github: https://github.com/Carlos4ndresh
+      - email: mailto:contact@carlosaherrera.com
+
+menus:
+  main:
+    - name: About
+      url: /about/
+      weight: 10
+
 outputs:
   home:
     - HTML

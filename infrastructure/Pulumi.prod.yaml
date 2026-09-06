@@ -1,5 +1,3 @@
 config:
   aws:region: ca-central-1
   carlosaherrera.com:domain: "carlosaherrera.com"
-  carlosaherrera.com:githubOwner: "Carlos4ndresh"  # Update this to your GitHub username
-  carlosaherrera.com:githubRepo: "carlosaherrera.com"  # Update this to your repository name

@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws"
 	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws/acm"
 	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws/cloudfront"
-	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws/iam"
 	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws/route53"
 	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws/s3"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
@@ -18,7 +18,6 @@ func main() {
 		domain := conf.Require("domain")
 		wwwDomain := fmt.Sprintf("www.%s", domain)
 
-		// Look up the existing Route53 zone
 		zone, err := route53.LookupZone(ctx, &route53.LookupZoneArgs{
 			Name: &domain,
 		})
@@ -26,7 +25,6 @@ func main() {
 			return fmt.Errorf("error looking up Route53 zone for domain %s: %v", domain, err)
 		}
 
-		// Create S3 bucket for website hosting
 		siteBucket, err := s3.NewBucket(ctx, "site-bucket", &s3.BucketArgs{
 			Bucket: pulumi.String(domain),
 		})
@@ -34,21 +32,6 @@ func main() {
 			return err
 		}
 
-		// Configure bucket for static website hosting
-		websiteConfig, err := s3.NewBucketWebsiteConfigurationV2(ctx, "site-bucket-website", &s3.BucketWebsiteConfigurationV2Args{
-			Bucket: siteBucket.ID(),
-			IndexDocument: &s3.BucketWebsiteConfigurationV2IndexDocumentArgs{
-				Suffix: pulumi.String("index.html"),
-			},
-			ErrorDocument: &s3.BucketWebsiteConfigurationV2ErrorDocumentArgs{
-				Key: pulumi.String("404.html"),
-			},
-		})
-		if err != nil {
-			return err
-		}
-
-		// Enable versioning
 		_, err = s3.NewBucketVersioningV2(ctx, "site-bucket-versioning", &s3.BucketVersioningV2Args{
 			Bucket: siteBucket.ID(),
 			VersioningConfiguration: &s3.BucketVersioningV2VersioningConfigurationArgs{
@@ -59,7 +42,27 @@ func main() {
 			return err
 		}
 
-		// Create US East 1 provider for ACM (CloudFront requires certificates in us-east-1)
+		_, err = s3.NewBucketPublicAccessBlock(ctx, "site-bucket-pab", &s3.BucketPublicAccessBlockArgs{
+			Bucket:                siteBucket.ID(),
+			BlockPublicAcls:       pulumi.Bool(true),
+			BlockPublicPolicy:     pulumi.Bool(true),
+			IgnorePublicAcls:      pulumi.Bool(true),
+			RestrictPublicBuckets: pulumi.Bool(true),
+		})
+		if err != nil {
+			return err
+		}
+
+		oac, err := cloudfront.NewOriginAccessControl(ctx, "site-oac", &cloudfront.OriginAccessControlArgs{
+			Name:                          pulumi.String(fmt.Sprintf("%s-oac", domain)),
+			OriginAccessControlOriginType: pulumi.String("s3"),
+			SigningBehavior:               pulumi.String("always"),
+			SigningProtocol:               pulumi.String("sigv4"),
+		})
+		if err != nil {
+			return err
+		}
+
 		usEast1Provider, err := aws.NewProvider(ctx, "aws-us-east-1", &aws.ProviderArgs{
 			Region: pulumi.String("us-east-1"),
 		})
@@ -67,7 +70,6 @@ func main() {
 			return err
 		}
 
-		// Request SSL certificate for both domain and www subdomain
 		certificate, err := acm.NewCertificate(ctx, "ssl-cert", &acm.CertificateArgs{
 			DomainName:       pulumi.String(domain),
 			ValidationMethod: pulumi.String("DNS"),
@@ -79,7 +81,6 @@ func main() {
 			return err
 		}
 
-		// Create validation records for certificate
 		certificate.DomainValidationOptions.ApplyT(func(options []acm.CertificateDomainValidationOption) error {
 			for i, option := range options {
 				recordName := fmt.Sprintf("validation-record-%d", i)
@@ -99,7 +100,6 @@ func main() {
 			return nil
 		})
 
-		// Wait for certificate validation
 		certValidation, err := acm.NewCertificateValidation(ctx, "cert-validation", &acm.CertificateValidationArgs{
 			CertificateArn: certificate.Arn,
 		}, pulumi.Provider(usEast1Provider))
@@ -107,23 +107,15 @@ func main() {
 			return err
 		}
 
-		// Create CloudFront distribution
 		distribution, err := cloudfront.NewDistribution(ctx, "site-distribution", &cloudfront.DistributionArgs{
 			Enabled: pulumi.Bool(true),
 			Comment: pulumi.String("Carlos A. Herrera personal website"),
 
 			Origins: cloudfront.DistributionOriginArray{
 				&cloudfront.DistributionOriginArgs{
-					DomainName: websiteConfig.WebsiteEndpoint,
-					OriginId:   pulumi.String("s3-origin"),
-					CustomOriginConfig: &cloudfront.DistributionOriginCustomOriginConfigArgs{
-						OriginProtocolPolicy: pulumi.String("http-only"),
-						HttpPort:             pulumi.Int(80),
-						HttpsPort:            pulumi.Int(443),
-						OriginSslProtocols: pulumi.StringArray{
-							pulumi.String("TLSv1.2"),
-						},
-					},
+					DomainName:            siteBucket.BucketRegionalDomainName,
+					OriginId:              pulumi.String("s3-origin"),
+					OriginAccessControlId: oac.ID(),
 				},
 			},
 
@@ -150,11 +142,10 @@ func main() {
 				},
 
 				MinTtl:     pulumi.Int(0),
-				DefaultTtl: pulumi.Int(3600),  // 1 hour
-				MaxTtl:     pulumi.Int(86400), // 1 day
+				DefaultTtl: pulumi.Int(3600),
+				MaxTtl:     pulumi.Int(86400),
 			},
 
-			// Custom error pages for better UX
 			CustomErrorResponses: cloudfront.DistributionCustomErrorResponseArray{
 				&cloudfront.DistributionCustomErrorResponseArgs{
 					ErrorCode:          pulumi.Int(404),
@@ -178,7 +169,7 @@ func main() {
 			ViewerCertificate: &cloudfront.DistributionViewerCertificateArgs{
 				AcmCertificateArn:      certValidation.CertificateArn,
 				SslSupportMethod:       pulumi.String("sni-only"),
-				MinimumProtocolVersion: pulumi.String("TLSv1.2_2021"),
+				MinimumProtocolVersion: pulumi.String("TLSv1.2_2025"),
 			},
 
 			PriceClass:        pulumi.String("PriceClass_100"),
@@ -202,43 +193,39 @@ func main() {
 			return err
 		}
 
-		// Allow public read access for website hosting (but block other public access)
-		publicAccessBlock, err := s3.NewBucketPublicAccessBlock(ctx, "site-bucket-pab", &s3.BucketPublicAccessBlockArgs{
-			Bucket:                siteBucket.ID(),
-			BlockPublicAcls:       pulumi.Bool(true),
-			BlockPublicPolicy:     pulumi.Bool(false), // Allow public read policy
-			IgnorePublicAcls:      pulumi.Bool(true),
-			RestrictPublicBuckets: pulumi.Bool(false), // Allow public read
-		})
-		if err != nil {
-			return err
-		}
-
-		// Create bucket policy to allow public read access (required for S3 website hosting)
-		bucketPolicyJSON := siteBucket.Arn.ApplyT(func(bucketArn string) string {
+		// Bucket policy granting CloudFront OAC access only
+		bucketPolicyJSON := pulumi.All(siteBucket.Arn, distribution.Arn).ApplyT(func(args []interface{}) string {
+			bucketArn := args[0].(string)
+			distArn := args[1].(string)
 			return fmt.Sprintf(`{
 				"Version": "2012-10-17",
 				"Statement": [
 					{
-						"Sid": "PublicReadGetObject",
+						"Sid": "AllowCloudFrontServicePrincipal",
 						"Effect": "Allow",
-						"Principal": "*",
+						"Principal": {
+							"Service": "cloudfront.amazonaws.com"
+						},
 						"Action": "s3:GetObject",
-						"Resource": "%s/*"
+						"Resource": "%s/*",
+						"Condition": {
+							"StringEquals": {
+								"AWS:SourceArn": "%s"
+							}
+						}
 					}
 				]
-			}`, bucketArn)
+			}`, bucketArn, distArn)
 		}).(pulumi.StringOutput)
 
 		_, err = s3.NewBucketPolicy(ctx, "site-bucket-policy", &s3.BucketPolicyArgs{
 			Bucket: siteBucket.ID(),
 			Policy: bucketPolicyJSON,
-		}, pulumi.DependsOn([]pulumi.Resource{publicAccessBlock}))
+		})
 		if err != nil {
 			return err
 		}
 
-		// Create Route53 records for the domain
 		_, err = route53.NewRecord(ctx, "root-domain-record", &route53.RecordArgs{
 			Name:   pulumi.String(domain),
 			Type:   pulumi.String("A"),
@@ -271,147 +258,14 @@ func main() {
 			return err
 		}
 
-		// Create GitHub OIDC Provider and IAM Role for Actions
-		err = createGitHubActionsRole(ctx, siteBucket, distribution)
-		if err != nil {
-			return err
-		}
-
-		// Export important values
 		ctx.Export("bucketName", siteBucket.ID())
-		ctx.Export("bucketDomainName", siteBucket.BucketDomainName)
+		ctx.Export("bucketArn", siteBucket.Arn)
 		ctx.Export("distributionId", distribution.ID())
+		ctx.Export("distributionArn", distribution.Arn)
 		ctx.Export("distributionDomainName", distribution.DomainName)
 		ctx.Export("certificateArn", certificate.Arn)
 		ctx.Export("websiteUrl", pulumi.Sprintf("https://%s", domain))
-		ctx.Export("wwwWebsiteUrl", pulumi.Sprintf("https://%s", wwwDomain))
 
 		return nil
 	})
-}
-
-// createGitHubActionsRole creates OIDC provider and IAM role for GitHub Actions
-func createGitHubActionsRole(ctx *pulumi.Context, siteBucket *s3.Bucket, distribution *cloudfront.Distribution) error {
-	conf := config.New(ctx, "")
-	githubRepo := conf.Get("githubRepo")
-	githubOwner := conf.Get("githubOwner")
-
-	// Default to carlosaherrera.com if not specified
-	if githubRepo == "" {
-		githubRepo = "carlosaherrera.com"
-	}
-	if githubOwner == "" {
-		githubOwner = "Carlos4ndresh" // Update this to your GitHub username
-	}
-
-	// Create GitHub OIDC Identity Provider
-	githubOidc, err := iam.NewOpenIdConnectProvider(ctx, "github-oidc", &iam.OpenIdConnectProviderArgs{
-		ClientIdLists: pulumi.StringArray{
-			pulumi.String("sts.amazonaws.com"),
-		},
-		ThumbprintLists: pulumi.StringArray{
-			pulumi.String("6938fd4d98bab03faadb97b34396831e3780aea1"),
-			pulumi.String("1c58a3a8518e8759bf075b76b750d4f2df264fcd"),
-		},
-		Url: pulumi.String("https://token.actions.githubusercontent.com"),
-		Tags: pulumi.StringMap{
-			"Name":    pulumi.String("GitHub Actions OIDC"),
-			"Project": pulumi.String("carlosaherrera.com"),
-		},
-	})
-	if err != nil {
-		return err
-	}
-
-	// Create IAM role for GitHub Actions
-	githubActionsRole, err := iam.NewRole(ctx, "github-actions-role", &iam.RoleArgs{
-		Name: pulumi.String("GitHubActionsRole-carlosaherrera"),
-		AssumeRolePolicy: pulumi.Sprintf(`{
-			"Version": "2012-10-17",
-			"Statement": [
-				{
-					"Effect": "Allow",
-					"Principal": {
-						"Federated": "%s"
-					},
-					"Action": "sts:AssumeRoleWithWebIdentity",
-					"Condition": {
-						"StringEquals": {
-							"token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
-						},
-						"StringLike": {
-							"token.actions.githubusercontent.com:sub": "repo:%s/%s:*"
-						}
-					}
-				}
-			]
-		}`, githubOidc.Arn, githubOwner, githubRepo),
-		Tags: pulumi.StringMap{
-			"Name":    pulumi.String("GitHub Actions Deployment Role"),
-			"Project": pulumi.String("carlosaherrera.com"),
-		},
-	})
-	if err != nil {
-		return err
-	}
-
-	// Create policy for GitHub Actions role
-	githubActionsPolicy, err := iam.NewPolicy(ctx, "github-actions-policy", &iam.PolicyArgs{
-		Name:        pulumi.String("GitHubActionsPolicy-carlosaherrera"),
-		Description: pulumi.String("Policy for GitHub Actions to deploy carlosaherrera.com"),
-		Policy: pulumi.All(siteBucket.Arn, distribution.Arn).ApplyT(func(args []interface{}) string {
-			bucketArn := args[0].(string)
-			distributionArn := args[1].(string)
-
-			return fmt.Sprintf(`{
-				"Version": "2012-10-17",
-				"Statement": [
-					{
-						"Effect": "Allow",
-						"Action": [
-							"s3:PutObject",
-							"s3:PutObjectAcl",
-							"s3:GetObject",
-							"s3:DeleteObject",
-							"s3:ListBucket"
-						],
-						"Resource": [
-							"%s",
-							"%s/*"
-						]
-					},
-					{
-						"Effect": "Allow",
-						"Action": [
-							"cloudfront:CreateInvalidation",
-							"cloudfront:GetInvalidation"
-						],
-						"Resource": "%s"
-					}
-				]
-			}`, bucketArn, bucketArn, distributionArn)
-		}).(pulumi.StringOutput),
-		Tags: pulumi.StringMap{
-			"Name":    pulumi.String("GitHub Actions Policy"),
-			"Project": pulumi.String("carlosaherrera.com"),
-		},
-	})
-	if err != nil {
-		return err
-	}
-
-	// Attach policy to role
-	_, err = iam.NewRolePolicyAttachment(ctx, "github-actions-policy-attachment", &iam.RolePolicyAttachmentArgs{
-		Role:      githubActionsRole.Name,
-		PolicyArn: githubActionsPolicy.Arn,
-	})
-	if err != nil {
-		return err
-	}
-
-	// Export GitHub Actions related values
-	ctx.Export("githubActionsRoleArn", githubActionsRole.Arn)
-	ctx.Export("githubOidcProviderArn", githubOidc.Arn)
-
-	return nil
 }

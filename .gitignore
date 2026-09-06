@@ -1,2 +1,14 @@
-.vscode/settings.json
+# Hugo output and cache
 public/
+resources/
+.hugo_build.lock
+
+# Go binaries (infrastructure)
+infrastructure/carlosaherrera.com
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
