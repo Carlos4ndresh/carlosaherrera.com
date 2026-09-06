@@ -1,98 +1,70 @@
-name: 🚀 Deploy Hugo Site
+name: Deploy Hugo Site
 
 on:
   push:
-    branches: [main, master]
+    branches: [main]
   pull_request:
-    branches: [main, master]
+    branches: [main]
   workflow_dispatch:
 
-# Required for OIDC
 permissions:
   id-token: write
   contents: read
 
 env:
-  HUGO_VERSION: 0.148.2
+  HUGO_VERSION: 0.165.0
   AWS_REGION: ca-central-1
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          submodules: recursive
           fetch-depth: 0
 
-      - name: 🛠️ Setup Hugo
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: ${{ env.HUGO_VERSION }}
           extended: true
 
-      - name: 📦 Setup Node.js (for any npm dependencies)
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: npm
-        if: hashFiles('package.json') != ''
+      - name: Build
+        run: hugo --minify --gc
 
-      - name: 📦 Install npm dependencies
-        run: npm ci
-        if: hashFiles('package.json') != ''
-
-      - name: 🏗️ Build Hugo site
-        run: |
-          echo "🏗️ Building Hugo site..."
-          hugo --minify --gc
-          echo "✅ Hugo build completed"
-          
-          echo "📊 Build statistics:"
-          echo "Total files: $(find public -type f | wc -l)"
-          echo "Total size: $(du -sh public)"
-
-      - name: 🔍 Validate build output
+      - name: Validate build
         run: |
           if [ ! -f "public/index.html" ]; then
-            echo "❌ Error: index.html not found in public directory"
+            echo "Error: public/index.html not found"
             exit 1
           fi
-          
-          if [ ! -d "public/css" ]; then
-            echo "⚠️ Warning: CSS directory not found"
-          fi
-          
-          echo "✅ Build validation passed"
 
-      - name: 🔐 Configure AWS credentials
+      - name: Configure AWS credentials
+        if: github.event_name != 'pull_request'
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
           role-duration-seconds: 1200
 
-      - name: 🧪 Test AWS connection
+      - name: Deploy to S3
+        if: github.event_name != 'pull_request'
         run: |
-          echo "🧪 Testing AWS connection..."
-          aws sts get-caller-identity
-          aws s3 ls s3://${{ secrets.S3_BUCKET_NAME }} --region ${{ env.AWS_REGION }} || true
-
-      - name: 📤 Deploy to S3
-        run: |
-          echo "📤 Deploying to S3 bucket: ${{ secrets.S3_BUCKET_NAME }}"
-          
-          # Sync files to S3 with proper content types and caching
+          # Sync all files with long-lived cache
           aws s3 sync public/ s3://${{ secrets.S3_BUCKET_NAME }} \
             --region ${{ env.AWS_REGION }} \
             --delete \
             --exact-timestamps \
             --exclude "*.DS_Store" \
-            --cache-control "public, max-age=31536000" \
-            --expires "$(date -d '+1 year' --utc +'%Y-%m-%dT%H:%M:%SZ')"
-          
-          # Override caching for HTML files (shorter cache)
+            --cache-control "public, max-age=31536000"
+
+          # Override HTML files with shorter cache so content updates propagate
           aws s3 cp public/ s3://${{ secrets.S3_BUCKET_NAME }} \
             --region ${{ env.AWS_REGION }} \
             --recursive \
@@ -100,103 +72,17 @@ jobs:
             --include "*.html" \
             --cache-control "public, max-age=3600" \
             --content-type "text/html; charset=utf-8"
-          
-          # Set correct content type for CSS and JS files
-          aws s3 cp public/ s3://${{ secrets.S3_BUCKET_NAME }} \
-            --region ${{ env.AWS_REGION }} \
-            --recursive \
-            --exclude "*" \
-            --include "*.css" \
-            --cache-control "public, max-age=31536000" \
-            --content-type "text/css"
-          
-          aws s3 cp public/ s3://${{ secrets.S3_BUCKET_NAME }} \
-            --region ${{ env.AWS_REGION }} \
-            --recursive \
-            --exclude "*" \
-            --include "*.js" \
-            --cache-control "public, max-age=31536000" \
-            --content-type "application/javascript"
-          
-          echo "✅ S3 deployment completed"
 
-      - name: 🔄 Invalidate CloudFront
+      - name: Invalidate CloudFront
+        if: github.event_name != 'pull_request'
         run: |
-          echo "🔄 Creating CloudFront invalidation..."
-          
-          invalidation_id=$(aws cloudfront create-invalidation \
+          aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/*" \
-            --query 'Invalidation.Id' \
-            --output text)
-          
-          echo "📋 Invalidation ID: $invalidation_id"
-          
-          # Wait for invalidation to complete (optional - can be removed for faster builds)
-          if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            echo "⏳ Waiting for invalidation to complete..."
-            aws cloudfront wait invalidation-completed \
-              --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-              --id $invalidation_id
-            echo "✅ CloudFront invalidation completed"
-          else
-            echo "🚀 Invalidation started (not waiting for completion)"
-          fi
+            --paths "/*"
 
-      - name: 📊 Deployment Summary
+      - name: Deployment summary
+        if: github.event_name != 'pull_request'
         run: |
-          echo "## 🎉 Deployment Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Resource | Status |" >> $GITHUB_STEP_SUMMARY
-          echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Hugo Build | ✅ Success |" >> $GITHUB_STEP_SUMMARY
-          echo "| S3 Deployment | ✅ Success |" >> $GITHUB_STEP_SUMMARY
-          echo "| CloudFront Invalidation | ✅ Started |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**🌍 Website URLs:**" >> $GITHUB_STEP_SUMMARY
-          echo "- 🔗 [https://carlosaherrera.com](https://carlosaherrera.com)" >> $GITHUB_STEP_SUMMARY
-          echo "- 🔗 [https://www.carlosaherrera.com](https://www.carlosaherrera.com)" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "*Deployment completed at $(date)*" >> $GITHUB_STEP_SUMMARY
-
-  # Optional: Create a PR preview (if you want staging environments)
-  preview:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📥 Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - name: 🛠️ Setup Hugo
-        uses: peaceiris/actions-hugo@v3
-        with:
-          hugo-version: ${{ env.HUGO_VERSION }}
-          extended: true
-
-      - name: 🏗️ Build for preview
-        run: |
-          echo "🏗️ Building Hugo site for PR preview..."
-          hugo --minify --gc --baseURL "https://pr-${{ github.event.pull_request.number }}.carlosaherrera.com"
-
-      - name: 💬 Comment PR
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const comment = `## 🔍 Preview Build
-            
-            Your PR has been built successfully! 
-            
-            📊 **Build Stats:**
-            - Commit: \`${context.sha.slice(0, 7)}\`
-            - Hugo Version: ${process.env.HUGO_VERSION}
-            
-            > 💡 This is a preview build. Merge to deploy to production.`;
-            
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-            });
+          echo "## Deployment complete" >> $GITHUB_STEP_SUMMARY
+          echo "- Site: https://carlosaherrera.com" >> $GITHUB_STEP_SUMMARY
+          echo "- Commit: \`${GITHUB_SHA::7}\`" >> $GITHUB_STEP_SUMMARY
